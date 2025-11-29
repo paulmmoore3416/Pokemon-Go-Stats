@@ -134,7 +134,7 @@ function PokemonCard({ poke, idx, active, onClick, onOpenModal, expanded, onTogg
   };
   return (
     <li className={`pokemon-card ${active ? 'active' : ''}`} onClick={handleClick}>
-      <img src={poke.image} alt={poke.name} className="pokemon-thumb" />
+      <img src={poke.image} alt={poke.name} className="pokemon-thumb" loading="lazy" width={64} height={64} srcSet={`${poke.image} 128w, ${poke.image} 256w`} sizes="64px" />
       <span className="pokemon-name">{poke.name}</span>
       <div className={`stats-popup ${expanded ? 'expanded' : ''}`} onClick={(e) => { e.stopPropagation(); onToggleExpand(); }}>
         <div className="popup-inner">
@@ -243,7 +243,7 @@ function ProfileModal({ poke, idx, onClose }) {
           </div>
           <div className="modal-character" ref={parallaxRef}>
             <div className="modal-parallax" aria-hidden />
-            <img src={poke.image} alt={poke.name} />
+              <img src={poke.image} alt={poke.name} loading="lazy" width={240} height={240} srcSet={`${poke.image} 240w, ${poke.image} 480w`} sizes="(max-width:900px) 180px, 240px" />
           </div>
           <div className="modal-info-box">
             <div><strong>{poke.name}</strong></div>
