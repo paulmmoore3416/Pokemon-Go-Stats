@@ -37,8 +37,6 @@ const rawPokemonList = [
   { name: 'Rayquaza', type: 'Dragon/Flying', stats: { HP: 213, Attack: 284, Defense: 170, Speed: 180, CP: 4337, IV: 99 }, image: 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/384.png' },
   { name: 'Mimikyu', type: 'Ghost/Fairy', stats: { HP: 146, Attack: 177, Defense: 199, Speed: 120, CP: 2275, IV: 87 }, image: 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/778.png' },
   { name: 'Togekiss', type: 'Fairy/Flying', stats: { HP: 198, Attack: 225, Defense: 217, Speed: 120, CP: 3332, IV: 92 }, image: 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/468.png' },
-  { name: 'Garchomp', type: 'Dragon/Ground', stats: { HP: 239, Attack: 261, Defense: 193, Speed: 180, CP: 3962, IV: 95 }, image: 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/445.png' },
-  { name: 'Lucario', type: 'Fighting/Steel', stats: { HP: 172, Attack: 236, Defense: 144, Speed: 170, CP: 2703, IV: 92 }, image: 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/448.png' },
   { name: 'Zoroark', type: 'Dark', stats: { HP: 155, Attack: 250, Defense: 127, Speed: 180, CP: 2710, IV: 90 }, image: 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/571.png' },
   { name: 'Dragapult', type: 'Dragon/Ghost', stats: { HP: 204, Attack: 270, Defense: 168, Speed: 200, CP: 3500, IV: 97 }, image: 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/887.png' },
   { name: 'Incineroar', type: 'Fire/Dark', stats: { HP: 200, Attack: 214, Defense: 175, Speed: 160, CP: 2780, IV: 89 }, image: 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/727.png' },
@@ -515,7 +513,6 @@ function App() {
 
   return (
     <main className="main-layout">
-      <Profile poke={pokemonList[activeIndex]} idx={activeIndex} loading={loading} />
       {/* left: profile, center: hover-panel, right: nav */}
       <div style={{display:'flex', gap:'1.25rem', alignItems:'flex-start', width:'100%'}}>
         <div style={{flex:'0 0 auto'}}>
