@@ -717,7 +717,11 @@ body.light-mode .move-row .move-type {
 .modal-name { font-size:34px; color:#fff; font-family:'Rubik', 'Roboto Slab', serif; font-weight:800; text-shadow: 0 6px 16px rgba(0,0,0,0.6) }
 .modal-meta { color:#c9d1d9; font-weight:700 }
 .type-pill { background: linear-gradient(90deg,#ffb3b3,#ffc6a8); padding:6px 10px; border-radius:999px; color:#041219; margin-left:8px; box-shadow: 0 6px 12px rgba(0,0,0,0.5) }
-.modal-close { position:absolute; top:18px; right:18px; width:44px; height:44px; border-radius:50%; background:rgba(255,255,255,0.02); color:#fff; border:1px solid rgba(255,255,255,0.06); font-weight:700; cursor:pointer }
+.share-controls { display:flex; gap:8px; margin-left:8px }
+.share-btn { background: linear-gradient(90deg,#0f1724,#102032); color: #fff; padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.06); font-weight:700; cursor:pointer; text-decoration:none }
+.share-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.5) }
+.modal-close { position:absolute; top:18px; right:18px; width:44px; height:44px; border-radius:50%; background:rgba(255,255,255,0.02); color:#fff; border:1px solid rgba(255,255,255,0.06); font-weight:700; cursor:pointer; transition: transform 220ms cubic-bezier(.2,.9,.3,1), box-shadow 220ms }
+.modal-close:hover { transform: rotate(-10deg) scale(1.06); box-shadow: 0 6px 20px rgba(0,0,0,0.6) }
 
 @media (max-width: 900px) {
   .profile-modal .modal-content { flex-direction:column; height:84vh; padding:1rem; gap:1rem }

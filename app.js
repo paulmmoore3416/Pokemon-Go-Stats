@@ -265,7 +265,13 @@ function ProfileModal({ poke, idx, onClose }) {
           </div>
           <div className="modal-bottom-bar">
             <div className="modal-name">{poke.name}</div>
-            <div className="modal-meta">Lv. 1 <span className="type-pill">{poke.type.split('/')[0]}</span></div>
+            <div style={{display:'flex', alignItems:'center', gap: '12px'}}>
+              <div className="modal-meta">Lv. 1 <span className="type-pill">{poke.type.split('/')[0]}</span></div>
+              <div className="share-controls">
+                <button className="share-btn" onClick={() => { navigator.clipboard?.writeText(window.location.href); alert('Page link copied'); }} title="Copy page link">Copy</button>
+                <a className="share-btn" href={`https://twitter.com/intent/tweet?text=Check out ${encodeURIComponent(poke.name)}%20on%20Pokemon%20Go%20Stats&url=${encodeURIComponent(window.location.href)}`} target="_blank" rel="noopener noreferrer" title="Share on Twitter">Twitter</a>
+              </div>
+            </div>
           </div>
         </div>
         <button ref={closeRef} className="modal-close" aria-label="Close" onClick={onClose}>✕</button>
