@@ -1,0 +1,17 @@
+{
+  "name": "pokemon-go-stats",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "test:e2e": "playwright test --project=chromium",
+    "test:e2e:headed": "playwright test --headed",
+    "test:lint": "eslint . || true",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "eslint": "^8.50.0",
+    "prettier": "^3.0.0",
+    "@lhci/cli": "^0.8.0"
+  }
+}

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Assets Gallery — Pokemon-Go-Stats</title>
+    <style>
+      body { font-family: Inter,system-ui,Arial,Helvetica,sans-serif; background:#0b0b0b; color:#e6eef6; padding:3rem; }
+      h1 { font-size:1.6rem; margin-bottom:1rem }
+      .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; }
+      .card { background:linear-gradient(180deg,#0f1720 0%, #0b0b0b 100%); border:1px solid rgba(255,255,255,0.04); padding:1rem; border-radius:10px; text-align:center }
+      img { max-width:100%; height:auto; border-radius:6px; background:rgba(255,255,255,0.02); }
+      .meta { margin-top:.5rem; color: #9fb4c7; font-size:.9rem }
+    </style>
+  </head>
+  <body>
+    <h1>Assets gallery</h1>
+    <p>Support images used for demos and docs (official artwork from PokeAPI sprites).</p>
+
+    <div class="grid">
+      <div class="card">
+        <img src="/assets/images/scyther.png" alt="Scyther" loading="lazy">
+        <div class="meta">Scyther — official artwork (sprite id 123)</div>
+      </div>
+
+      <div class="card">
+        <img src="/assets/images/scizor.png" alt="Scizor" loading="lazy">
+        <div class="meta">Scizor — official artwork (sprite id 212)</div>
+      </div>
+
+      <div class="card">
+        <img src="/assets/images/pikachu.png" alt="Pikachu" loading="lazy">
+        <div class="meta">Pikachu — official artwork (sprite id 25)</div>
+      </div>
+
+      <div class="card">
+        <img src="/assets/images/charizard.png" alt="Charizard" loading="lazy">
+        <div class="meta">Charizard — official artwork (sprite id 6)</div>
+      </div>
+    </div>
+
+    <hr style="margin:2rem 0;border:0;border-top:1px solid rgba(255,255,255,0.04)">
+    <p style="color:#8aa7bd; font-size:.9rem">This gallery is intended as a quick visual reference for contributors and reviewers — it's not part of the production bundle but useful when reviewing design and screenshots in PRs.</p>
+  </body>
+</html>

@@ -1,0 +1,35 @@
+name: Playwright E2E tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install deps
+        run: |
+          npm ci
+          npx playwright install --with-deps
+
+      - name: Serve site
+        run: |
+          # run a simple static server for the tests
+          python3 -m http.server 8000 &
+          sleep 1
+
+      - name: Run Playwright tests
+        env:
+          CI: true
+        run: |
+          npx playwright test --config=playwright.config.js --retries=1

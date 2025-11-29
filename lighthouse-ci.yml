@@ -1,0 +1,23 @@
+name: Lighthouse CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  lhci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install deps
+        run: npm ci
+      - name: Start site
+        run: |
+          python3 -m http.server 8000 &
+          sleep 2
+      - name: Run LHCI autorun
+        run: npx @lhci/cli autorun --upload.target=temporary-public-storage --collect.url=http://localhost:8000
