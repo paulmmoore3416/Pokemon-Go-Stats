@@ -1,0 +1,16 @@
+name: Populate Project Board
+
+on:
+  workflow_dispatch:
+
+jobs:
+  populate:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Populate Project Board
+      env:
+        GH_TOKEN: ${{ secrets.PROJECT_POPULATE_PAT }}
+      run: |
+        chmod +x create_project_and_populate.sh
+        ./create_project_and_populate.sh paulmmoore3416 5
