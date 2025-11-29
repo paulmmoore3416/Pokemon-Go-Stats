@@ -6,6 +6,15 @@ Welcome to Pokemon Stats — a sleek, console-style Pokédex UI that highlights 
 
 This project has been styled and hardened for a production-like experience: a full-screen modal detail view (click a character to open the stats screen), animated radar charts, icons, lazy-loaded images, improved accessibility (keyboard modal focus trap & Escape to close), and CI/deploy automation.
 
+Badges
+
+- Playwright E2E: ![E2E](https://github.com/paulmmoore3416/Pokemon-Go-Stats/actions/workflows/playwright-e2e.yml/badge.svg)
+- Python tests: ![Python tests](https://github.com/paulmmoore3416/Pokemon-Go-Stats/actions/workflows/python-tests.yml/badge.svg)
+- Unit tests (JS): ![Unit tests](https://github.com/paulmmoore3416/Pokemon-Go-Stats/actions/workflows/codecov.yml/badge.svg)
+- Coverage (Codecov): [![Codecov](https://img.shields.io/codecov/c/github/paulmmoore3416/Pokemon-Go-Stats.svg)](https://codecov.io/gh/paulmmoore3416/Pokemon-Go-Stats)
+- Lint checks: ![Lint](https://github.com/paulmmoore3416/Pokemon-Go-Stats/actions/workflows/lint.yml/badge.svg)
+
+
 ## ✨ Highlights
 
 - Console/GitHub gray theme with blue accents and soft glows
@@ -65,6 +74,11 @@ chmod +x scripts/run_e2e.sh
 
 - ESLint + Prettier are configured and run during CI.
 - Lighthouse CI runs on PRs and uploads temporary reports for review (see `.github/workflows/lighthouse-ci.yml`).
+
+### Pre-commit hooks (husky + lint-staged)
+
+We've added a `prepare` script to install husky locally; after `npm ci`, run `npm run prepare` to get the pre-commit hook. The pre-commit hook runs `lint-staged` and will format code and fix lint warnings before commits.
+
 
 
 ## 📋 Project & contribution workflow
