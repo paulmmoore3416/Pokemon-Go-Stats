@@ -66,15 +66,15 @@ function StatChart({ stats }) {
   const statKeys = ['HP', 'Attack', 'Defense', 'Speed', 'CP', 'IV'];
   const values = statKeys.map(k => stats[k] || 0);
   const max = Math.max(...values, 3000);
-  // make the radar polygon smaller so it doesn't touch labels and looks like the example
+  // make the radar polygon larger to fit the space
   const points = values.map((v, i) => {
     const angle = (Math.PI * 2 * i) / values.length - Math.PI / 2;
-    const r = 50 + (v / max) * 50; // reduced amplitude
-    return [90 + Math.cos(angle) * r, 90 + Math.sin(angle) * r];
+    const r = 60 + (v / max) * 60;
+    return [120 + Math.cos(angle) * r, 120 + Math.sin(angle) * r];
   });
   const polygon = points.map(([x, y]) => `${x},${y}`).join(' ');
   return (
-    <svg width="180" height="180" viewBox="0 0 180 180">
+    <svg width="240" height="240" viewBox="0 0 240 240">
       <polygon points={polygon} className="radar-polygon" fill="#58a6ff44" stroke="#58a6ff" strokeWidth="2" />
       {/* outline ring for the polygon to add extra glow */}
       <polygon points={polygon} fill="none" className="radar-polygon-outline" stroke="#8cff91" strokeWidth="6" strokeOpacity="0.18" />
@@ -84,8 +84,8 @@ function StatChart({ stats }) {
       {statKeys.map((k, i) => {
         const angle = (Math.PI * 2 * i) / values.length - Math.PI / 2;
         // place labels further out so they sit around the radar (outside the polygon)
-        const x = 90 + Math.cos(angle) * 110;
-        const y = 90 + Math.sin(angle) * 110;
+        const x = 120 + Math.cos(angle) * 110;
+        const y = 120 + Math.sin(angle) * 110;
         return (
           <text key={k} x={x} y={y} textAnchor="middle" alignmentBaseline="middle" fill="#ffffff" fontSize="12" fontWeight={700}>
             {k}
