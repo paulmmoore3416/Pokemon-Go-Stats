@@ -1,0 +1,29 @@
+name: PR preview artifact
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build static preview
+        run: |
+          mkdir -p preview
+          cp -r index.html styles.css app.js assets preview || true
+          # include any other docs or test assets
+
+      - name: Create zip
+        run: |
+          cd preview
+          zip -r ../site-preview.zip . || true
+
+      - name: Upload preview artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-preview
+          path: site-preview.zip

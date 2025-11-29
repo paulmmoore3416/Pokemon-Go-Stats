@@ -1,0 +1,24 @@
+name: Issue labeler
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Label new issues
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const title = context.payload.issue.title.toLowerCase();
+            const body = (context.payload.issue.body || '').toLowerCase();
+            const labels = [];
+            if (title.includes('data') || body.includes('pokeapi') || body.includes('data update')) labels.push('data-update');
+            if (title.includes('bug') || body.includes('error') || body.includes('broken')) labels.push('bug');
+            if (title.includes('feature') || title.startsWith('feature:')) labels.push('enhancement');
+            if (labels.length) {
+              await github.issues.addLabels({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, labels });
+            }
