@@ -28,6 +28,45 @@ This project has been styled and hardened for a production-like experience: a fu
 - `styles.css` — all theme & UI styles
 - `app.js` — React components + data and rendering logic
 
+### Assets gallery
+
+Quick visual references for the supporting images are in `assets/gallery.html`. This page showcases the demo images included in `assets/images/` (Scyther, Scizor, Pikachu, Charizard) and is useful for reviewers and contributors.
+
+You can preview it locally after starting the static server with:
+
+```bash
+python3 -m http.server 8000
+# open http://localhost:8000/assets/gallery.html
+```
+
+### End-to-end testing (Playwright)
+
+We added Playwright end-to-end tests to validate key interactions (modal open/close, hover interactions). CI automatically runs these tests on pull requests and pushes.
+
+To run the tests locally:
+
+```bash
+# install dependencies
+npm ci
+npx playwright install --with-deps
+# start a server then run tests
+python3 -m http.server 8000 &
+npx playwright test
+```
+
+There's also a convenience script to run e2e tests from the repo root:
+
+```bash
+chmod +x scripts/run_e2e.sh
+./scripts/run_e2e.sh
+```
+
+### Linting & Lighthouse checks
+
+- ESLint + Prettier are configured and run during CI.
+- Lighthouse CI runs on PRs and uploads temporary reports for review (see `.github/workflows/lighthouse-ci.yml`).
+
+
 ## 📋 Project & contribution workflow
 
 This repository uses a lightweight, evergreen process to keep authoritative Pokémon data fresh and maintain a healthy contribution flow.
