@@ -117,6 +117,22 @@ function PokemonCard({ poke, idx, active, onClick, expanded, onToggleExpand }) {
           </div>
           <div className="popup-chart">
             <StatChart stats={poke.stats} />
+
+            {/* Moves moved under the polygon chart so they sit visually beneath the radar */}
+            <div className="popup-moves-under-chart" aria-hidden={expanded ? 'false' : 'true'}>
+              {[
+                { type: 'Psychic', name: 'Agility', pp: '30/30' },
+                { type: 'Dragon', name: 'Dragon Tail', pp: '10/10' },
+                { type: 'Normal', name: 'Slam', pp: '20/20' },
+                { type: 'Dragon', name: 'Outrage', pp: '10/10' }
+              ].map((m, i) => (
+                <div key={i} className="popup-move-row under-chart">
+                  <div className="popup-move-type">{m.type}</div>
+                  <div className="popup-move-name">{m.name}</div>
+                  <div className="popup-move-pp">{m.pp}</div>
+                </div>
+              ))}
+            </div>
           </div>
           <div className="popup-info">
             {['HP','Attack','Defense','Speed','CP','IV'].map((k) => {
@@ -133,22 +149,7 @@ function PokemonCard({ poke, idx, active, onClick, expanded, onToggleExpand }) {
               );
             })}
 
-            {/* Moves list (compact) */}
-            <div style={{ height: '6px' }} />
-            <div className="popup-moves">
-              {[
-                { type: 'Psychic', name: 'Agility', pp: '30/30' },
-                { type: 'Dragon', name: 'Dragon Tail', pp: '10/10' },
-                { type: 'Normal', name: 'Slam', pp: '20/20' },
-                { type: 'Dragon', name: 'Outrage', pp: '10/10' }
-              ].map((m, i) => (
-                <div key={i} className="popup-move-row">
-                  <div className="popup-move-type">{m.type}</div>
-                  <div className="popup-move-name">{m.name}</div>
-                  <div className="popup-move-pp">{m.pp}</div>
-                </div>
-              ))}
-            </div>
+            {/* compact stat rows remain here — moves were intentionally moved under the polygon */}
           </div>
         </div>
       </div>

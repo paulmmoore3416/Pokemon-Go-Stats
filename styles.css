@@ -187,9 +187,16 @@ main {
   transform: translateX(-50%) translateY(-6px);
 }
 
-.stats-popup .popup-inner { display:flex; gap:0.6rem; align-items:center; position:relative }
+.stats-popup .popup-inner { display:flex; gap:0.8rem; align-items:flex-start; position:relative }
 .popup-star { position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:#000; border-radius:50%; padding:4px; border:2px solid #58a6ff }
-.stats-popup .popup-chart svg { width:110px; height:110px }
+.stats-popup .popup-chart {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:0.4rem;
+  padding: 0.2rem 0.4rem;
+}
+.stats-popup .popup-chart svg { width:140px; height:140px }
 .stats-popup .popup-info { display:flex; flex-direction:column; gap:0.35rem }
 .popup-row { display:flex; gap:0.6rem; align-items:center }
 .popup-row-key { width:54px; color:#9aa4b2; font-weight:700 }
@@ -520,6 +527,11 @@ body.light-mode .profile-stats-chart {
 }
 /* popup moves layout */
 .popup-moves { display:flex; flex-direction:column; gap:0.35rem; margin-top:0.25rem }
+.popup-moves-under-chart { display:flex; flex-direction:column; gap:0.4rem; width:100%; align-items:center; margin-top:6px }
+.popup-move-row.under-chart { width: 90%; background: linear-gradient(90deg, rgba(88,166,255,0.06), rgba(88,166,255,0.02)); border-radius:8px; padding:6px 8px; display:flex; gap:0.6rem; align-items:center; border:1px solid rgba(88,166,255,0.12); box-shadow: 0 4px 12px rgba(2,6,23,0.55); font-weight:700 }
+.popup-move-row.under-chart .popup-move-type { background: linear-gradient(120deg,#58a6ff,#3b82f6); color: #021323; padding:0.15rem 0.5rem; border-radius: 999px; box-shadow: 0 2px 8px #58a6ff22; font-size:0.82rem }
+.popup-move-row.under-chart .popup-move-name { color:#eaf2ff; font-weight:700; margin-left:2px }
+.popup-move-row.under-chart .popup-move-pp { margin-left:auto; color:#9aa4b2; font-size:0.9rem }
 .popup-move-row { display:flex; align-items:center; gap:0.7rem; padding:0.25rem 0.4rem; border-radius:8px; background:rgba(255,255,255,0.02); }
 .popup-move-type { background:#58a6ff; color:#fff; padding:0.1rem 0.5rem; border-radius:999px; font-weight:700; font-size:0.8rem }
 .popup-move-name { color:#eaf2ff; font-weight:700; min-width:100px }
