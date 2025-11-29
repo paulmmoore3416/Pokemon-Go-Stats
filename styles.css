@@ -1,10 +1,24 @@
+:root{
+  --bg-1: #0b0710;
+  --bg-2: #140720;
+  --accent: #58a6ff;
+  --accent-2: #8cff91;
+  --muted: #9aa4b2;
+  --card-bg: #0f1215;
+  --panel: rgba(255,255,255,0.02);
+  --glass: rgba(255,255,255,0.03);
+  --text: #e6eef8;
+  --overlay: rgba(2,6,23,0.85);
+  --gold: #ffd166;
+}
+
 body {
-  background: linear-gradient(135deg, #0a0a0a 60%, #1a1a1a 100%);
-  color: #c9d1d9;
-  font-family: 'Courier New', monospace;
+  background: linear-gradient(135deg, var(--bg-1) 55%, var(--bg-2) 100%);
+  color: var(--text);
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   margin: 0;
   min-height: 100vh;
-  transition: background 0.5s, color 0.5s;
+  transition: background 0.5s, color 0.5s, transform 0.12s;
   overflow-x: hidden;
 }
 
@@ -665,7 +679,7 @@ body.light-mode .move-row .move-type {
 .profile-modal .modal-content { position:relative; display:flex; gap:2rem; align-items:center; width:92%; max-width:1200px; height:78vh; background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:18px; padding:2rem; border: 2px solid rgba(255,255,255,0.04); box-shadow: 0 30px 120px rgba(2,6,23,0.95); overflow:hidden }
 .modal-left { width:48%; position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; }
 .modal-badge { position:absolute; left:36px; top:26px; width:220px; height:120px; background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); border-radius:12px; border:2px solid rgba(255,255,255,0.12); display:flex; flex-direction:column; align-items:center; justify-content:center; transform: rotate(-6deg); box-shadow: 0 10px 30px rgba(0,0,0,0.7) }
-.modal-badge .badge-text { color:#fff; font-weight:800; font-size:22px; text-align:center; letter-spacing:1px; text-shadow: 0 4px 20px rgba(0,0,0,0.6) }
+.modal-badge .badge-text { color:#fff; font-family:'Rubik', 'Roboto Slab', serif; font-weight:800; font-size:24px; text-align:center; letter-spacing:1px; text-shadow: 0 6px 28px rgba(0,0,0,0.6) }
 .modal-badge .badge-stars { color:#f3f3f3; opacity:0.85; font-weight:700; margin-top:6px }
 .modal-character { width:340px; height:320px; display:flex; align-items:center; justify-content:center; }
 .modal-character img { max-width:240px; max-height:240px; filter: drop-shadow(0 18px 20px rgba(0,0,0,0.8)); transform: translateY(-8px); }
@@ -673,7 +687,7 @@ body.light-mode .move-row .move-type {
 .modal-right { width:48%; position:relative; display:flex; flex-direction:column; align-items:center; justify-content:flex-start }
 .modal-radar-wrap { position:relative; width:320px; height:320px; display:flex; align-items:center; justify-content:center }
 .modal-radar-wrap svg { width:320px; height:320px }
-.radar-label { position:absolute; color:#fff; font-weight:800; text-align:center; font-size:14px; text-shadow: 0 6px 12px rgba(0,0,0,0.6) }
+.radar-label { position:absolute; color:#fff; font-family:'Rubik', sans-serif; font-weight:800; text-align:center; font-size:14px; text-shadow: 0 6px 12px rgba(0,0,0,0.6) }
 .radar-label.top { top: -8px; left: 50%; transform: translateX(-50%); color:#b0ffff }
 .radar-label.right { right: -8px; top: 32%; color:#ff9b9b }
 .radar-label.bottom-right { right: -6px; bottom: 46px; color:#ffd166 }
@@ -682,7 +696,7 @@ body.light-mode .move-row .move-type {
 .radar-label.left-top { left: -16px; top: -4px; color:#ffc06b }
 .radar-label .qual { display:block; font-size:12px; color:#07282a; background: linear-gradient(180deg,#ffd166,#ffb347); padding:0 8px; border-radius:999px; margin-top:6px; box-shadow: 0 4px 10px rgba(0,0,0,0.5) }
 .modal-bottom-bar { width:100%; display:flex; align-items:center; justify-content:space-between; margin-top:12px; background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.005)); border-radius: 12px; padding: 14px 18px; border: 1px solid rgba(255,255,255,0.04) }
-.modal-name { font-size:28px; color:#fff; font-weight:800; text-shadow: 0 4px 12px rgba(0,0,0,0.6) }
+.modal-name { font-size:34px; color:#fff; font-family:'Rubik', 'Roboto Slab', serif; font-weight:800; text-shadow: 0 6px 16px rgba(0,0,0,0.6) }
 .modal-meta { color:#c9d1d9; font-weight:700 }
 .type-pill { background: linear-gradient(90deg,#ffb3b3,#ffc6a8); padding:6px 10px; border-radius:999px; color:#041219; margin-left:8px; box-shadow: 0 6px 12px rgba(0,0,0,0.5) }
 .modal-close { position:absolute; top:18px; right:18px; width:44px; height:44px; border-radius:50%; background:rgba(255,255,255,0.02); color:#fff; border:1px solid rgba(255,255,255,0.06); font-weight:700; cursor:pointer }
