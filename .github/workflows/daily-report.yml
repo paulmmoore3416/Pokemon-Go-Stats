@@ -1,0 +1,63 @@
+name: Daily Report to Discord
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Daily at midnight UTC
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Generate Daily Report
+      run: |
+        OWNER="paulmmoore3416"
+        REPO="Pokemon-Go-Stats"
+        DATE=$(date -u +%Y-%m-%d)
+
+        # Get repo info
+        REPO_INFO=$(gh api /repos/${OWNER}/${REPO})
+        STARS=$(echo "$REPO_INFO" | jq -r .stargazers_count)
+        FORKS=$(echo "$REPO_INFO" | jq -r .forks_count)
+
+        # Open issues
+        OPEN_ISSUES=$(gh api /repos/${OWNER}/${REPO}/issues --jq 'length')
+
+        # Open PRs
+        OPEN_PRS=$(gh api /repos/${OWNER}/${REPO}/pulls --jq 'length')
+
+        # Recent commits (last 24 hours)
+        SINCE=$(date -u -d '1 day ago' +%Y-%m-%dT%H:%M:%SZ)
+        RECENT_COMMITS=$(gh api /repos/${OWNER}/${REPO}/commits --jq "[.[] | select(.commit.committer.date > \"$SINCE\")] | length")
+
+        # Workflow statuses (simplified)
+        WORKFLOWS=$(gh api /repos/${OWNER}/${REPO}/actions/workflows --jq '.workflows[] | {name: .name, state: .state}')
+
+        # Construct Markdown message
+        MESSAGE="## 📊 Daily Report for ${REPO} - ${DATE}
+
+        ### Repository Stats
+        - ⭐ Stars: ${STARS}
+        - 🍴 Forks: ${FORKS}
+        - 🐛 Open Issues: ${OPEN_ISSUES}
+        - 🔄 Open PRs: ${OPEN_PRS}
+        - 📝 Recent Commits (24h): ${RECENT_COMMITS}
+
+        ### CI/CD Status
+        ![CI](https://github.com/${OWNER}/${REPO}/actions/workflows/ci.yml/badge.svg)
+        ![E2E](https://github.com/${OWNER}/${REPO}/actions/workflows/playwright-e2e.yml/badge.svg)
+        ![Unit Tests](https://github.com/${OWNER}/${REPO}/actions/workflows/codecov.yml/badge.svg)
+        ![Lint](https://github.com/${OWNER}/${REPO}/actions/workflows/lint.yml/badge.svg)
+
+        ### Workflows Overview
+        $(echo "$WORKFLOWS" | jq -r '. | "- \(.name): \(.state)"')
+
+        [View Repository](https://github.com/${OWNER}/${REPO}) | [Issues](https://github.com/${OWNER}/${REPO}/issues) | [PRs](https://github.com/${OWNER}/${REPO}/pulls)"
+
+        # Escape for JSON
+        MESSAGE_JSON=$(echo "$MESSAGE" | jq -Rs .)
+
+        # Send to Discord
+        curl -H "Content-Type: application/json" \
+             -d "{\"content\": $MESSAGE_JSON}" \
+             ${{ secrets.DISCORD_WEBHOOK }}
