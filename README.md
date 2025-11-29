@@ -28,6 +28,32 @@ This project has been styled and hardened for a production-like experience: a fu
 - `styles.css` — all theme & UI styles
 - `app.js` — React components + data and rendering logic
 
+## 📋 Project & contribution workflow
+
+This repository uses a lightweight, evergreen process to keep authoritative Pokémon data fresh and maintain a healthy contribution flow.
+
+- Project plan: see `docs/PROJECT_PLAN.md` for the project's mission, workflows and acceptance criteria.
+- Contributing guide: `CONTRIBUTING.md` explains how to open issues, submit data changes and run the scheduled data refresh locally.
+- Issue templates: use templates to open well-formed bugs, features, or `data-update` issues.
+
+### Automation in this repo
+
+- A scheduled GitHub Action (weekly by default) refreshes the canonical dataset from PokeAPI and opens a PR for review (`.github/workflows/data-refresh.yml`).
+- Optional automation to add issues to a Projects board is available (see `.github/workflows/project-sync.yml`) but requires secrets to be set (PAT + project column ids).
+
+#### Create the project board locally (if you want to do it yourself)
+
+If your `gh` CLI is authenticated with a PAT that includes project scopes you can create and populate the classic project board with the included script:
+
+```bash
+# run from repo root
+chmod +x scripts/create_project_board.sh
+./scripts/create_project_board.sh paulmmoore3416 Pokemon-Go-Stats
+```
+
+The script will create a classic project, 3 columns (To Do / In Progress / Done) and populate them based on issue labels.
+
+
 ## 🚀 Production-ready features added
 
 - Full-screen modal view that matches a console / game UI; click a character to open the "profile" screen.
@@ -67,3 +93,7 @@ If you'd like, I can now:
 - Set the Pages source to the `gh-pages` branch (or `production`) and configure automatic cache headers.
 - Add lightweight Lighthouse checks to the CI workflow and fail merges below thresholds.
 - Add small end-to-end tests for UI interactions (puppeteer/playwright) to keep quality high on high-traffic sites.
+
+## Next steps & recommended improvements
+
+See `docs/RECOMMENDATIONS.md` for the prioritized enhancements (Playwright tests, Lighthouse CI, visual regression, and automation) which will help maintain this as a living, high-quality project.

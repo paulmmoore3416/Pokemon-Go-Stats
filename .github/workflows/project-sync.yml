@@ -1,0 +1,27 @@
+name: Project sync (optional)
+
+on:
+  issues:
+    types: [opened, labeled]
+
+jobs:
+  add-to-project:
+    runs-on: ubuntu-latest
+    if: ${{ contains(github.event.issue.labels.*.name, 'To Do') || github.event.action == 'opened' }}
+    steps:
+      - name: Check for required secrets
+        run: |
+          if [ -z "${{ secrets.PROJECT_PAT }}" ] || [ -z "${{ secrets.PROJECT_COLUMN_TODO }}" ]; then
+            echo "Missing PROJECT_PAT or PROJECT_COLUMN_TODO - workflow is optional. Set the secrets to enable project sync.";
+            exit 78; # neutral
+          fi
+
+      - name: Add issue as project card
+        env:
+          PROJECT_PAT: ${{ secrets.PROJECT_PAT }}
+          TODO_COL: ${{ secrets.PROJECT_COLUMN_TODO }}
+        run: |
+          echo "Adding issue #${{ github.event.issue.number }} to column ${TODO_COL}";
+          # convert issue number to issue db id
+          ISSUE_DB_ID=$(curl -s -H "Authorization: token ${PROJECT_PAT}" https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }} | jq -r .id)
+          curl -s -X POST -H "Authorization: token ${PROJECT_PAT}" -H "Accept: application/vnd.github.inertia-preview+json" https://api.github.com/projects/columns/${TODO_COL}/cards -d "{\"content_id\": ${ISSUE_DB_ID}, \"content_type\": \"Issue\"}"
