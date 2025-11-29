@@ -513,22 +513,8 @@ function App() {
 
   return (
     <main className="main-layout">
-      {/* left: profile, center: hover-panel, right: nav */}
+      {/* left: nav, center: hover-panel, right: profile */}
       <div style={{display:'flex', gap:'1.25rem', alignItems:'flex-start', width:'100%'}}>
-        <div style={{flex:'0 0 auto'}}>
-          <Profile poke={pokemonList[activeIndex]} idx={activeIndex} loading={loading} />
-        </div>
-
-        <div style={{width:320, flex:'0 0 320px'}}>
-          {hoveredIndex !== null && (
-            <div className="hover-info-panel">
-              <HoverInfoPanel
-                poke={pokemonList[hoveredIndex]}
-                details={detailsCache[pokemonList[hoveredIndex].name.toLowerCase().replace(/[^a-z0-9-]/g, '-')]} />
-            </div>
-          )}
-        </div>
-
         <div style={{flex:1}}>
             <Nav
         pokemonList={pokemonList}
@@ -545,6 +531,20 @@ function App() {
         filter={filter}
         onFilterChange={(e) => setFilter(e.target.value)}
           />
+        </div>
+
+        <div style={{width:320, flex:'0 0 320px'}}>
+          {hoveredIndex !== null && (
+            <div className="hover-info-panel">
+              <HoverInfoPanel
+                poke={pokemonList[hoveredIndex]}
+                details={detailsCache[pokemonList[hoveredIndex].name.toLowerCase().replace(/[^a-z0-9-]/g, '-')]} />
+            </div>
+          )}
+        </div>
+
+        <div style={{flex:'0 0 auto'}}>
+          <Profile poke={pokemonList[activeIndex]} idx={activeIndex} loading={loading} />
         </div>
       </div>
       {modalIndex !== null && (
