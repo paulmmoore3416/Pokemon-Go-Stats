@@ -103,9 +103,15 @@ function statQuality(value, max) {
   return { label: 'Not So Good', color: '#9aa4b2' };
 }
 
-function PokemonCard({ poke, idx, active, onClick, expanded, onToggleExpand }) {
+function PokemonCard({ poke, idx, active, onClick, onOpenModal, expanded, onToggleExpand }) {
+  // clicking the card will select and open the full-screen modal view
+  const handleClick = (e) => {
+    // allow outer handlers and the modal open action
+    if (onClick) onClick();
+    if (onOpenModal) onOpenModal();
+  };
   return (
-    <li className={`pokemon-card ${active ? 'active' : ''}`} onClick={onClick}>
+    <li className={`pokemon-card ${active ? 'active' : ''}`} onClick={handleClick}>
       <img src={poke.image} alt={poke.name} className="pokemon-thumb" />
       <span className="pokemon-name">{poke.name}</span>
       <div className={`stats-popup ${expanded ? 'expanded' : ''}`} onClick={(e) => { e.stopPropagation(); onToggleExpand(); }}>
@@ -134,7 +140,7 @@ function PokemonCard({ poke, idx, active, onClick, expanded, onToggleExpand }) {
               ))}
             </div>
           </div>
-          <div className="popup-info">
+            <div className="popup-info">
             {['HP','Attack','Defense','Speed','CP','IV'].map((k) => {
               const val = poke.stats[k] || 0;
               const quality = statQuality(val, Math.max(...Object.values(poke.stats), 3000));
@@ -157,7 +163,51 @@ function PokemonCard({ poke, idx, active, onClick, expanded, onToggleExpand }) {
   );
 }
 
-function Nav({ pokemonList, filteredList, activeIndex, onSelect, expandedPopups, onToggleExpand, search, onSearchChange, filter, onFilterChange }) {
+function ProfileModal({ poke, idx, onClose }) {
+  if (!poke) return null;
+  const values = Object.values(poke.stats || {});
+  const quality = (k) => statQuality(poke.stats[k] || 0, Math.max(...values, 3000));
+
+  return (
+    <div className="profile-modal" role="dialog" aria-modal="true">
+      <div className="modal-backdrop" onClick={onClose} />
+      <div className="modal-content" aria-hidden={false}>
+        <div className="modal-left">
+          <div className="modal-badge"> 
+            <div className="badge-text">GREAT<br/>STATS!</div>
+            <div className="badge-stars">★ ★ ★</div>
+          </div>
+          <div className="modal-character">
+            <img src={poke.image} alt={poke.name} />
+          </div>
+          <div className="modal-info-box">
+            <div><strong>{poke.name}</strong></div>
+            <div>Pokédex No. <strong>{String(idx+1).padStart(3,'0')}</strong></div>
+            <div>ID No. <strong>{Math.floor(100000 + Math.random()*900000)}</strong></div>
+          </div>
+        </div>
+        <div className="modal-right">
+          <div className="modal-radar-wrap">
+            <StatChart stats={poke.stats} />
+            <div className="radar-label top">HP<br/><span className="qual">{quality('HP').label}</span></div>
+            <div className="radar-label right">Attack<br/><span className="qual">{quality('Attack').label}</span></div>
+            <div className="radar-label bottom-right">Defense<br/><span className="qual">{quality('Defense').label}</span></div>
+            <div className="radar-label bottom">Speed<br/><span className="qual">{quality('Speed').label}</span></div>
+            <div className="radar-label left">Sp. Def<br/><span className="qual">{quality('Defense').label}</span></div>
+            <div className="radar-label left-top">Sp. Atk<br/><span className="qual">{quality('Attack').label}</span></div>
+          </div>
+          <div className="modal-bottom-bar">
+            <div className="modal-name">{poke.name}</div>
+            <div className="modal-meta">Lv. 1 <span className="type-pill">{poke.type.split('/')[0]}</span></div>
+          </div>
+        </div>
+        <button className="modal-close" aria-label="Close" onClick={onClose}>✕</button>
+      </div>
+    </div>
+  );
+}
+
+function Nav({ pokemonList, filteredList, activeIndex, onSelect, onOpenModal, expandedPopups, onToggleExpand, search, onSearchChange, filter, onFilterChange }) {
   return (
     <nav className="side-nav">
       <div id="nav-controls">
@@ -187,12 +237,13 @@ function Nav({ pokemonList, filteredList, activeIndex, onSelect, expandedPopups,
         {filteredList.map((poke) => {
           const originalIndex = pokemonList.findIndex(p => p.name === poke.name);
           return (
-            <PokemonCard
+              <PokemonCard
               key={originalIndex}
               poke={poke}
               idx={originalIndex}
-              active={activeIndex === originalIndex}
-              onClick={() => onSelect(originalIndex)}
+                active={activeIndex === originalIndex}
+                onClick={() => onSelect(originalIndex)}
+                onOpenModal={() => onOpenModal(originalIndex)}
               expanded={expandedPopups[originalIndex]}
               onToggleExpand={() => onToggleExpand(originalIndex)}
             />
@@ -261,6 +312,7 @@ function App() {
   const [filter, setFilter] = useState('');
   const [loading, setLoading] = useState(false);
   const [expandedPopups, setExpandedPopups] = useState({});
+  const [modalIndex, setModalIndex] = useState(null);
 
   const filteredList = pokemonList.filter(poke => {
     const matchesSearch = poke.name.toLowerCase().includes(search.toLowerCase());
@@ -276,6 +328,19 @@ function App() {
     }, 300); // Simulate load time
   };
 
+  const handleOpenModal = (idx) => {
+    // set the active item and open modal
+    setActiveIndex(idx);
+    setModalIndex(idx);
+    // lock page scroll while modal open
+    document.body.style.overflow = 'hidden';
+  };
+
+  const handleCloseModal = () => {
+    setModalIndex(null);
+    document.body.style.overflow = '';
+  };
+
   const handleToggleExpand = (idx) => {
     setExpandedPopups(prev => ({ ...prev, [idx]: !prev[idx] }));
   };
@@ -287,6 +352,15 @@ function App() {
     });
   }, []);
 
+  // close modal on ESC
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'Escape' && modalIndex !== null) handleCloseModal();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [modalIndex]);
+
   return (
     <main className="main-layout">
       <Profile poke={pokemonList[activeIndex]} idx={activeIndex} loading={loading} />
@@ -295,6 +369,7 @@ function App() {
         filteredList={filteredList}
         activeIndex={activeIndex}
         onSelect={handleSelect}
+        onOpenModal={handleOpenModal}
         expandedPopups={expandedPopups}
         onToggleExpand={handleToggleExpand}
         search={search}
@@ -302,6 +377,9 @@ function App() {
         filter={filter}
         onFilterChange={(e) => setFilter(e.target.value)}
       />
+      {modalIndex !== null && (
+        <ProfileModal poke={pokemonList[modalIndex]} idx={modalIndex} onClose={handleCloseModal} />
+      )}
     </main>
   );
 }
