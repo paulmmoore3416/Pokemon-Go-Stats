@@ -513,9 +513,9 @@ function App() {
 
   return (
     <main className="main-layout">
-      {/* left: nav, center: hover-panel, right: profile */}
+      {/* left: nav (sidebar), center: hover-panel, right: profile */}
       <div style={{display:'flex', gap:'1.25rem', alignItems:'flex-start', width:'100%'}}>
-        <div style={{flex:1}}>
+        <div style={{flex:'0 0 320px'}}>
             <Nav
         pokemonList={pokemonList}
         filteredList={filteredList}
@@ -543,7 +543,7 @@ function App() {
           )}
         </div>
 
-        <div style={{flex:'0 0 auto'}}>
+        <div style={{flex:1}}>
           <Profile poke={pokemonList[activeIndex]} idx={activeIndex} loading={loading} />
         </div>
       </div>
