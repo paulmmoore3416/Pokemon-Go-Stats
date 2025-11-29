@@ -127,7 +127,7 @@ function statQuality(value, max) {
   return { label: 'Not So Good', color: '#9aa4b2' };
 }
 
-function PokemonCard({ poke, idx, active, onClick, onOpenModal, expanded, onToggleExpand }) {
+function PokemonCard({ poke, idx, active, onClick, onOpenModal, expanded, onToggleExpand, onHover, onLeave }) {
   // clicking the card will select and open the full-screen modal view
   const handleClick = (e) => {
     // allow outer handlers and the modal open action
@@ -135,7 +135,7 @@ function PokemonCard({ poke, idx, active, onClick, onOpenModal, expanded, onTogg
     if (onOpenModal) onOpenModal();
   };
   return (
-    <li className={`pokemon-card ${active ? 'active' : ''}`} onClick={handleClick}>
+    <li className={`pokemon-card ${active ? 'active' : ''}`} onClick={handleClick} onMouseEnter={() => onHover && onHover(idx)} onMouseLeave={() => onLeave && onLeave(idx)}>
       <img src={poke.image} alt={poke.name} className="pokemon-thumb" loading="lazy" width={64} height={64} srcSet={`${poke.image} 128w, ${poke.image} 256w`} sizes="64px" />
       <span className="pokemon-name">{poke.name}</span>
       <div className={`stats-popup ${expanded ? 'expanded' : ''}`} onClick={(e) => { e.stopPropagation(); onToggleExpand(); }}>
@@ -184,6 +184,44 @@ function PokemonCard({ poke, idx, active, onClick, onOpenModal, expanded, onTogg
         </div>
       </div>
     </li>
+  );
+}
+
+function HoverInfoPanel({ poke, details }) {
+  if (!poke) return null;
+  return (
+    <div className="hover-panel console-frame">
+      <div style={{display:'flex', gap: '1rem', alignItems:'center'}}>
+        <img src={poke.image} alt={poke.name} className="pokemon-thumb" style={{width:80, height:80, borderRadius:12}}/>
+        <div>
+          <div style={{fontWeight:800, fontSize:20, color:'#fff'}}>{poke.name}</div>
+          <div style={{color:'#9aa4b2'}}>{poke.type}</div>
+        </div>
+      </div>
+      <div style={{marginTop:12}}>
+        <div style={{fontWeight:700, color:'#c9d1d9'}}>Quick Stats</div>
+        <div style={{display:'flex', gap:8, marginTop:8}}>
+          {Object.entries(poke.stats).slice(0,3).map(([k,v]) => (
+            <div key={k} className="small-stat">
+              <div className="stat-label">{k}</div>
+              <div className="stat-value">{v}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{marginTop:10}}>
+          {details ? (
+            <>
+              <div style={{fontWeight:700, marginBottom:4}}>Details</div>
+              <div style={{color:'#9aa4b2', fontSize:13}}>{details.flavor_text || 'No description available.'}</div>
+              <div style={{marginTop:8, color:'#c9d1d9'}}><strong>Height:</strong> {details.height} • <strong>Weight:</strong> {details.weight} • <strong>XP:</strong> {details.base_experience}</div>
+              <div style={{marginTop:6, color:'#9aa4b2'}}><strong>Abilities:</strong> {details.abilities.join(', ')}</div>
+            </>
+          ) : (
+            <div style={{color:'#9aa4b2'}}>Loading details…</div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -280,7 +318,7 @@ function ProfileModal({ poke, idx, onClose }) {
   );
 }
 
-function Nav({ pokemonList, filteredList, activeIndex, onSelect, onOpenModal, expandedPopups, onToggleExpand, search, onSearchChange, filter, onFilterChange }) {
+function Nav({ pokemonList, filteredList, activeIndex, onSelect, onOpenModal, onHover, onLeave, expandedPopups, onToggleExpand, search, onSearchChange, filter, onFilterChange }) {
   return (
     <nav className="side-nav">
       <div id="nav-controls">
@@ -317,6 +355,8 @@ function Nav({ pokemonList, filteredList, activeIndex, onSelect, onOpenModal, ex
                 active={activeIndex === originalIndex}
                 onClick={() => onSelect(originalIndex)}
                 onOpenModal={() => onOpenModal(originalIndex)}
+                  onHover={(i) => onHover && onHover(i)}
+                  onLeave={() => onLeave && onLeave(originalIndex)}
               expanded={expandedPopups[originalIndex]}
               onToggleExpand={() => onToggleExpand(originalIndex)}
             />
@@ -386,6 +426,8 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [expandedPopups, setExpandedPopups] = useState({});
   const [modalIndex, setModalIndex] = useState(null);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [detailsCache, setDetailsCache] = useState({});
 
   const filteredList = pokemonList.filter(poke => {
     const matchesSearch = poke.name.toLowerCase().includes(search.toLowerCase());
@@ -418,12 +460,49 @@ function App() {
     setExpandedPopups(prev => ({ ...prev, [idx]: !prev[idx] }));
   };
 
+  // fetch additional details (PokeAPI) on demand and cache them
+  const fetchPokemonDetails = async (name) => {
+    const key = name.toLowerCase().replace(/[^a-z0-9-]/g, '-');
+    if (detailsCache[key]) return detailsCache[key];
+    try {
+      const pokeUrl = `https://pokeapi.co/api/v2/pokemon/${key}`;
+      const speciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${key}`;
+      const [pokeRes, speciesRes] = await Promise.all([fetch(pokeUrl), fetch(speciesUrl)]);
+      if (!pokeRes.ok || !speciesRes.ok) throw new Error('Not found');
+      const pokeJson = await pokeRes.json();
+      const speciesJson = await speciesRes.json();
+      // get English flavor text
+      const flavor = (speciesJson.flavor_text_entries || []).find(e => e.language && e.language.name === 'en');
+      const details = {
+        height: pokeJson.height,
+        weight: pokeJson.weight,
+        abilities: pokeJson.abilities.map(a => a.ability.name),
+        base_experience: pokeJson.base_experience,
+        flavor_text: flavor ? flavor.flavor_text.replace(/\n|\f/g, ' ') : '',
+        sprites: pokeJson.sprites
+      };
+      setDetailsCache(prev => ({ ...prev, [key]: details }));
+      return details;
+    } catch (err) {
+      console.warn('fetchPokemonDetails failed', err);
+      return null;
+    }
+  };
+
   useEffect(() => {
     const toggle = document.getElementById('darkModeToggle');
     toggle.addEventListener('change', () => {
       document.body.classList.toggle('light-mode');
     });
   }, []);
+
+  // fetch details when hoveredIndex changes
+  useEffect(() => {
+    if (hoveredIndex === null) return;
+    const poke = pokemonList[hoveredIndex];
+    if (!poke) return;
+    fetchPokemonDetails(poke.name);
+  }, [hoveredIndex]);
 
   // close modal on ESC
   useEffect(() => {
@@ -437,19 +516,40 @@ function App() {
   return (
     <main className="main-layout">
       <Profile poke={pokemonList[activeIndex]} idx={activeIndex} loading={loading} />
-      <Nav
+      {/* left: profile, center: hover-panel, right: nav */}
+      <div style={{display:'flex', gap:'1.25rem', alignItems:'flex-start', width:'100%'}}>
+        <div style={{flex:'0 0 auto'}}>
+          <Profile poke={pokemonList[activeIndex]} idx={activeIndex} loading={loading} />
+        </div>
+
+        <div style={{width:320, flex:'0 0 320px'}}>
+          {hoveredIndex !== null && (
+            <div className="hover-info-panel">
+              <HoverInfoPanel
+                poke={pokemonList[hoveredIndex]}
+                details={detailsCache[pokemonList[hoveredIndex].name.toLowerCase().replace(/[^a-z0-9-]/g, '-')]} />
+            </div>
+          )}
+        </div>
+
+        <div style={{flex:1}}>
+            <Nav
         pokemonList={pokemonList}
         filteredList={filteredList}
         activeIndex={activeIndex}
         onSelect={handleSelect}
         onOpenModal={handleOpenModal}
+              onHover={(i)=>setHoveredIndex(i)}
+              onLeave={()=>setHoveredIndex(null)}
         expandedPopups={expandedPopups}
         onToggleExpand={handleToggleExpand}
         search={search}
         onSearchChange={(e) => setSearch(e.target.value)}
         filter={filter}
         onFilterChange={(e) => setFilter(e.target.value)}
-      />
+          />
+        </div>
+      </div>
       {modalIndex !== null && (
         <ProfileModal poke={pokemonList[modalIndex]} idx={modalIndex} onClose={handleCloseModal} />
       )}

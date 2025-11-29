@@ -509,6 +509,16 @@ body.light-mode .profile-type {
   justify-content: center;
   margin-right: 2rem;
 }
+
+/* Hover info panel next to Profile (prevents overlapping nav) */
+.hover-info-panel { position:relative; display:block; }
+.hover-panel { padding: 0.9rem; border-radius: 12px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.03); box-shadow: 0 12px 36px rgba(2,6,23,0.7); color:var(--text) }
+.hover-panel .small-stat { display:flex; flex-direction:column; align-items:center; justify-content:center; background: linear-gradient(180deg, #0f1215, #14181c); padding: 0.5rem 0.8rem; border-radius:8px; border:1px solid rgba(255,255,255,0.03); min-width:72px }
+.hover-panel .small-stat .stat-label { color:var(--muted); font-size:12px }
+.hover-panel .small-stat .stat-value { font-weight:800; color:var(--accent); font-size:16px }
+
+/* ensure hover panel sits above nav but below modal */
+.hover-info-panel { z-index: 8000 }
 body.light-mode .profile-stats-chart {
   background: #f5f7fa;
   border-color: #e2e6ea;
