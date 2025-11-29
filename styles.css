@@ -216,6 +216,12 @@ main {
   width: 48%;
 }
 .stats-popup .popup-chart svg { width:160px; height:160px }
+
+/* radar polygon animation + glow */
+.radar-polygon { stroke-dasharray: 1200; stroke-dashoffset: 1200; animation: draw 900ms ease-out forwards; filter: drop-shadow(0 8px 18px rgba(88,166,255,0.14)); }
+.radar-polygon-outline { filter: blur(8px); opacity:0; animation: outlineGlow 1100ms ease-out 150ms forwards }
+@keyframes draw { from { stroke-dashoffset: 1200; opacity:0 } to { stroke-dashoffset: 0; opacity:1 } }
+@keyframes outlineGlow { 0% { opacity: 0 } 60% { opacity: 0.5 } 100% { opacity: 0.18 } }
 .stats-popup .popup-info { display:flex; flex-direction:column; gap:0.35rem; width:52%; padding-left:0.6rem }
 .popup-row { display:flex; gap:0.6rem; align-items:center }
 .popup-row-key { width:54px; color:#9aa4b2; font-weight:700 }

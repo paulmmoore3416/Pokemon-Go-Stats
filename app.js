@@ -77,7 +77,9 @@ function StatChart({ stats }) {
   const polygon = points.map(([x, y]) => `${x},${y}`).join(' ');
   return (
     <svg width="180" height="180" viewBox="0 0 180 180">
-      <polygon points={polygon} fill="#58a6ff44" stroke="#58a6ff" strokeWidth="2" />
+      <polygon points={polygon} className="radar-polygon" fill="#58a6ff44" stroke="#58a6ff" strokeWidth="2" />
+      {/* outline ring for the polygon to add extra glow */}
+      <polygon points={polygon} fill="none" className="radar-polygon-outline" stroke="#8cff91" strokeWidth="6" strokeOpacity="0.18" />
       {points.map(([x, y], i) => (
         <circle key={i} cx={x} cy={y} r="4" fill="#58a6ff" />
       ))}
