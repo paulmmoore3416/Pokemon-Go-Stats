@@ -646,4 +646,9 @@ body.light-mode .move-row .move-type {
   .profile-info h2 {
     font-size: 1.3rem;
   }
+
+  /* responsive popup/chart adjustments */
+  .stats-popup { left: 50%; transform: translateX(-50%) translateY(8px); min-width: 220px; }
+  .stats-popup .popup-chart svg { width: 110px; height: 110px }
+  .popup-move-row.under-chart { width: 94%; padding: 5px 6px }
 }
