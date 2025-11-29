@@ -208,10 +208,34 @@ function ProfileModal({ poke, idx, onClose }) {
     return () => window.removeEventListener('mousemove', onMove);
   }, []);
 
+  // accessibility: trap focus within the modal while it is open
+  const modalRef = React.useRef(null);
+  const closeRef = React.useRef(null);
+
+  React.useEffect(() => {
+    // focus close button on open
+    if (closeRef.current) closeRef.current.focus();
+    const node = modalRef.current;
+    if (!node) return;
+    const focusables = node.querySelectorAll('button, a, input, [tabindex]:not([tabindex="-1"])');
+    function onKey(e) {
+      if (e.key !== 'Tab') return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    }
+    node.addEventListener('keydown', onKey);
+    return () => node.removeEventListener('keydown', onKey);
+  }, []);
+
   return (
     <div className="profile-modal" role="dialog" aria-modal="true">
       <div className="modal-backdrop" onClick={onClose} />
-      <div className="modal-content" aria-hidden={false}>
+      <div className="modal-content" ref={modalRef} aria-hidden={false}>
         <div className="modal-left">
           <div className="modal-badge"> 
             <div className="badge-text">GREAT<br/>STATS!</div>
@@ -242,7 +266,7 @@ function ProfileModal({ poke, idx, onClose }) {
             <div className="modal-meta">Lv. 1 <span className="type-pill">{poke.type.split('/')[0]}</span></div>
           </div>
         </div>
-        <button className="modal-close" aria-label="Close" onClick={onClose}>✕</button>
+        <button ref={closeRef} className="modal-close" aria-label="Close" onClick={onClose}>✕</button>
       </div>
     </div>
   );
