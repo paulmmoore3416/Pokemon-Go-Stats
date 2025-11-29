@@ -96,6 +96,28 @@ function StatChart({ stats }) {
   );
 }
 
+function TypeIcon({ type }) {
+  // small generic icon — circles/letters for now so it stays fast and license-free
+  const t = (type || '').toLowerCase();
+  const colors = {
+    psychic: '#f4a6ff',
+    dragon: '#6fffe1',
+    normal: '#cbd5ff',
+    fire: '#ffb3a3',
+    water: '#a3d4ff',
+    electric: '#ffe58a',
+    grass: '#b6ff9b',
+    dark: '#8d8dff'
+  };
+  const bg = colors[t.toLowerCase()] || '#58a6ff';
+  return (
+    <svg width="28" height="20" viewBox="0 0 28 20" style={{display:'inline-block'}} aria-hidden>
+      <rect width="28" height="20" rx="8" fill={bg} />
+      <text x="14" y="14" textAnchor="middle" fontSize="11" fill="#051423" fontWeight={800}>{type[0] || '?'}</text>
+    </svg>
+  )
+}
+
 function statQuality(value, max) {
   const pct = (value / max) * 100;
   if (pct >= 75) return { label: 'Best', color: '#ff6b6b' };
@@ -133,7 +155,7 @@ function PokemonCard({ poke, idx, active, onClick, onOpenModal, expanded, onTogg
                 { type: 'Dragon', name: 'Outrage', pp: '10/10' }
               ].map((m, i) => (
                 <div key={i} className="popup-move-row under-chart">
-                  <div className="popup-move-type">{m.type}</div>
+                  <div className="popup-move-type"><TypeIcon type={m.type} /></div>
                   <div className="popup-move-name">{m.name}</div>
                   <div className="popup-move-pp">{m.pp}</div>
                 </div>
@@ -168,6 +190,24 @@ function ProfileModal({ poke, idx, onClose }) {
   const values = Object.values(poke.stats || {});
   const quality = (k) => statQuality(poke.stats[k] || 0, Math.max(...values, 3000));
 
+  const parallaxRef = React.useRef(null);
+
+  React.useEffect(() => {
+    const node = parallaxRef.current;
+    if (!node) return;
+    const onMove = (e) => {
+      // lightweight parallax based on window center
+      const rect = node.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = (e.clientX - cx) / rect.width;
+      const dy = (e.clientY - cy) / rect.height;
+      node.style.transform = `translate(${dx * 6}px, ${dy * 6}px) scale(1.02)`;
+    };
+    window.addEventListener('mousemove', onMove);
+    return () => window.removeEventListener('mousemove', onMove);
+  }, []);
+
   return (
     <div className="profile-modal" role="dialog" aria-modal="true">
       <div className="modal-backdrop" onClick={onClose} />
@@ -177,7 +217,8 @@ function ProfileModal({ poke, idx, onClose }) {
             <div className="badge-text">GREAT<br/>STATS!</div>
             <div className="badge-stars">★ ★ ★</div>
           </div>
-          <div className="modal-character">
+          <div className="modal-character" ref={parallaxRef}>
+            <div className="modal-parallax" aria-hidden />
             <img src={poke.image} alt={poke.name} />
           </div>
           <div className="modal-info-box">

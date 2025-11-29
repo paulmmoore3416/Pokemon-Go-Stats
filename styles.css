@@ -552,6 +552,18 @@ body.light-mode .profile-stats-chart {
 .popup-move-row.under-chart .popup-move-name { color:#eaf2ff; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-left:8px }
 .popup-move-row.under-chart .popup-move-type { margin-right: 2px }
 .popup-move-row.under-chart .popup-move-pp { color:#9aa4b2; font-size:0.9rem; justify-self:end }
+
+/* small type icon area */
+.popup-move-row.under-chart .popup-move-type svg { width:28px; height:20px; border-radius:6px; overflow:visible }
+
+/* star/badge animation for modal */
+.modal-badge { transform-origin: center center }
+.modal-badge .badge-stars { display:inline-block; transform-origin:center; animation: badge-bounce 1800ms infinite cubic-bezier(.2,.9,.3,1) }
+.modal-badge:hover .badge-stars { animation-play-state: running; transform: scale(1.05) }
+@keyframes badge-bounce { 0% { transform: translateY(0) rotate(-6deg) } 45% { transform: translateY(-6px) rotate(-6deg)} 100% { transform: translateY(0) rotate(-6deg) } }
+
+/* parallax behind character */
+.modal-parallax { position:absolute; inset: -30px -40px -30px -40px; background: radial-gradient(circle at 30% 25%, rgba(255,255,255,0.04), rgba(150,90,255,0.03) 25%, rgba(30,10,40,0.0) 60%); border-radius:22px; filter: blur(20px); transform: translate(0,0); transition: transform 300ms cubic-bezier(.2,.9,.3,1) }
 .popup-move-row { display:flex; align-items:center; gap:0.7rem; padding:0.25rem 0.4rem; border-radius:8px; background:rgba(255,255,255,0.02); }
 .popup-move-type { background:#58a6ff; color:#fff; padding:0.1rem 0.5rem; border-radius:999px; font-weight:700; font-size:0.8rem }
 .popup-move-name { color:#eaf2ff; font-weight:700; min-width:100px }
